@@ -15,7 +15,7 @@ export const NFTMarketPlaceProvider = ({ children }) => {
       const url=`https://ipfs.io/ipfs/${added.path}`;
       return url;
     } catch (error) {
-      toast.error(error.message);
+      toast.error("Something Wrong while uploading data to IPFS");
     }
   }
   const createNft=async(image,name,description,price,router)=>{
@@ -27,7 +27,7 @@ export const NFTMarketPlaceProvider = ({ children }) => {
       await createSale(url,price);
       router.push("/searchPage");
     } catch (error) {
-      toast.error(error.message);
+      toast.error("Something wrong while creating NFT");
     }
   }
   const createSale=async(url,formInputPrice,isReselling,id)=>{
@@ -36,16 +36,16 @@ export const NFTMarketPlaceProvider = ({ children }) => {
       const provider=new ethers.BrowserProvider(window.ethereum);
       const signer=await provider.getSigner();
       const contract=fetchContract(signer);
-      const listingPrice=await contract.returnListingPrice();
+      const listingPrice=await contract.getListingPrice();
       const transaction=!isReselling?(
         await contract.createToken(url,price,{value:listingPrice})
       ):(
-        await contract.resellNFT(id,price,{value:listingPrice})
+        await contract.resellToken(id,price,{value:listingPrice})
       );
       await transaction.wait();
       toast.success("Transaction Successful");
     } catch (error) {
-      toast.error(error.message);
+      toast.error("Something wrong while Resell NFT");
     }
   }
   const checkIfWalletIsConnected=async()=>{
@@ -64,7 +64,7 @@ export const NFTMarketPlaceProvider = ({ children }) => {
       const signer=await provider.getSigner();
       const contract=fetchContract(signer);
       const price=ethers.parseEther(nft.price);
-      const transaction=await contract.buyNFT(nft.tokenId,{value:price});
+      const transaction=await contract.createMarketSale(nft.tokenId,{value:price});
       await transaction.wait();
       router.push("/author");
     } catch (error) {
@@ -75,7 +75,7 @@ export const NFTMarketPlaceProvider = ({ children }) => {
     try {
       const provider=new ethers.JsonRpcProvider(alchemyUrl);
       const contract=fetchContract(provider);
-      const data=await contract.FetchUnsoldNfts();
+      const data=await contract.fetchMarketItems();
       const items=await Promise.all(
         data.map(async({tokenId,seller,owner,price:UnformattedPrice})=>{
           const tokenURI=await contract.tokenURI(tokenId);
@@ -96,14 +96,14 @@ export const NFTMarketPlaceProvider = ({ children }) => {
       );
       return items;
     } catch (error) {
-      toast.error(error.message);
+      toast.error("Something Wrong While fetching data");
     }
   }
   const fetchMyNftOrListed=async(type)=>{
     try {
       const provider=new ethers.JsonRpcProvider(alchemyUrl);
       const contract=fetchContract(provider);
-      const data=type=="fetchListedNfts"?await contract.listedNfts():await contract.FetchMyNfts();
+      const data=type=="fetchListedNfts"?await contract.fetchItemsListed():await contract.fetchMyNFTs();
       const items=await Promise.all(
         data.map(async({tokenId,seller,owner,price:UnformattedPrice})=>{
           const tokenURI=await contract.tokenURI(tokenId);
@@ -125,13 +125,15 @@ export const NFTMarketPlaceProvider = ({ children }) => {
       );
       return items;
     } catch (error) {
-      toast.error(error.message);
+      toast.error("Something Wrong While fetching data");
     }
   }
   useEffect(()=>{
     checkIfWalletIsConnected();
-    fetchNft();
-    fetchMyNftOrListed();
+    if(fetchNft,fetchMyNftOrListed){
+      fetchNft();
+      fetchMyNftOrListed();
+    }
   },[]);
   return (
     <NftMarketPlaceContext.Provider value={{uploadTopIpfs,createNft,fetchNft,currentAccount,createSale,buyNft,fetchMyNftOrListed}}>

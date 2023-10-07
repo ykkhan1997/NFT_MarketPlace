@@ -1,6 +1,6 @@
 const ethers=require("ethers");
 const dotenv=require("dotenv");
-dotenv.config({path:".env.config"});
+dotenv.config({path:"../.env.config"});
 const contractAddress=process.env.NEXT_PUBLIC_CONTRACT_ADDRESS
 const ABI=require("../artifacts/contracts/NFTMarketplace.sol/NftMarketPlace.json");
 import {create as IPFSHTTPClient} from "ipfs-http-client";

@@ -30,8 +30,10 @@ const searchPage = () => {
   }
   useEffect(()=>{
     fetchNft().then((items)=>{
-      setNfts(items.reverse());
-      setNftCopy(items);
+      if(items){
+        setNfts(items.reverse());
+        setNftCopy(items);
+      }
     });
   },[]);
   // const collectionArray = [
