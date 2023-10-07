@@ -16,6 +16,7 @@ export const NFTMarketPlaceProvider = ({ children }) => {
       return url;
     } catch (error) {
       toast.error("Something Wrong while uploading data to IPFS");
+      console.log(error.message);
     }
   }
   const createNft=async(image,name,description,price,router)=>{
@@ -28,6 +29,7 @@ export const NFTMarketPlaceProvider = ({ children }) => {
       router.push("/searchPage");
     } catch (error) {
       toast.error("Something wrong while creating NFT");
+      console.log(error.message);
     }
   }
   const createSale=async(url,formInputPrice,isReselling,id)=>{
@@ -45,7 +47,8 @@ export const NFTMarketPlaceProvider = ({ children }) => {
       await transaction.wait();
       toast.success("Transaction Successful");
     } catch (error) {
-      toast.error("Something wrong while Resell NFT");
+      toast.error("Something wrong while listing NFT");
+      console.log(error.message);
     }
   }
   const checkIfWalletIsConnected=async()=>{
@@ -69,6 +72,7 @@ export const NFTMarketPlaceProvider = ({ children }) => {
       router.push("/author");
     } catch (error) {
       toast.error("Something Wrong while buy NFT");
+      console.log(error.message);
     }
   }
   const fetchNft=async()=>{
@@ -97,6 +101,7 @@ export const NFTMarketPlaceProvider = ({ children }) => {
       return items;
     } catch (error) {
       toast.error("Something Wrong While fetching data");
+      console.log(error.message);
     }
   }
   const fetchMyNftOrListed=async(type)=>{
@@ -126,11 +131,12 @@ export const NFTMarketPlaceProvider = ({ children }) => {
       return items;
     } catch (error) {
       toast.error("Something Wrong While fetching data");
+      console.log(error.message);
     }
   }
   useEffect(()=>{
     checkIfWalletIsConnected();
-    if(fetchNft,fetchMyNftOrListed){
+    if(fetchNft.length===0,fetchMyNftOrListed.length===0){
       fetchNft();
       fetchMyNftOrListed();
     }
