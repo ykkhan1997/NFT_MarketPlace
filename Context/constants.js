@@ -11,7 +11,6 @@ export const fetchContract=(ProviderOrSigner)=>new ethers.Contract(
 );
 const projectId=process.env.NEXT_PUBLIC_PROJECT_ID
 const projectSecret=process.env.NEXT_PUBLIC_SECRET_KEY
-console.log(projectId,projectSecret,contractAddress);
 const auth="Basic "+Buffer.from(projectId+":"+projectSecret).toString("base64");
 export const client=IPFSHTTPClient({
     host:"ipfs.infura.io",

@@ -9,6 +9,7 @@ import {
 import Style from "./FollowerTab.module.css";
 import FollowerTabCard from "./FollowerTabCard/FollowerTabCard";
 import images from "../../img";
+import Link from "next/link";
 
 const FollowerTab = ({TopCreators}) => {
   const CardArray = [
@@ -152,11 +153,13 @@ const FollowerTab = ({TopCreators}) => {
       </div>
 
       {popular && (
+        <Link href={{pathname:"/author"}}>
         <div className={Style.followerTab_box}>
           {TopCreators.map((el, i) => (
             <FollowerTabCard key={i + 1} i={i} el={el} />
           ))}
         </div>
+        </Link>
       )}
 
       {following && (

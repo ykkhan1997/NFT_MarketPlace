@@ -136,10 +136,8 @@ export const NFTMarketPlaceProvider = ({ children }) => {
   }
   useEffect(()=>{
     checkIfWalletIsConnected();
-    if(fetchNft.length===0,fetchMyNftOrListed.length===0){
       fetchNft();
       fetchMyNftOrListed();
-    }
   },[]);
   return (
     <NftMarketPlaceContext.Provider value={{uploadTopIpfs,createNft,fetchNft,currentAccount,createSale,buyNft,fetchMyNftOrListed}}>
