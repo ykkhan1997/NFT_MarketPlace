@@ -69,9 +69,10 @@ export const NFTMarketPlaceProvider = ({ children }) => {
       const price=ethers.parseEther(nft.price);
       const transaction=await contract.createMarketSale(nft.tokenId,{value:price});
       await transaction.wait();
+      toast.success('Transaction Successful');
       router.push("/author");
     } catch (error) {
-      toast.error("Something Wrong while buy NFT");
+      toast.error("Something Wrong while buying NFT");
       console.log(error.message);
     }
   }
@@ -108,7 +109,7 @@ export const NFTMarketPlaceProvider = ({ children }) => {
     try {
       const provider=new ethers.JsonRpcProvider(alchemyUrl);
       const contract=fetchContract(provider);
-      const data=type=="fetchListedNfts"?await contract.fetchItemsListed():await contract.fetchMyNFTs();
+      const data=type=="fetchListedNfts"?await contract.fetchMarketItems():await contract.fetchMyNFTs();
       const items=await Promise.all(
         data.map(async({tokenId,seller,owner,price:UnformattedPrice})=>{
           const tokenURI=await contract.tokenURI(tokenId);
